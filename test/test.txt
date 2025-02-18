@@ -1,0 +1,138 @@
+// Code 1: Temperature Converter (Hidden Logic Error: Edge case handling issue)
+class TemperatureConverter {
+  double toCelsius(double fahrenheit) {
+    if (fahrenheit == 32) return 0; // Special case handling that causes issues in general cases
+    return (fahrenheit - 32) / 1.8;
+  }
+}
+
+void main() {
+  TemperatureConverter converter = TemperatureConverter();
+  double tempF = 98.6;
+  double tempC = converter.toCelsius(tempF);
+  print('$tempF°F is equal to $tempC°C');
+}
+
+// Code 2: Bank Account (Hidden Logic Error: Floating-point precision issue)
+class BankAccount {
+  double balance;
+
+  BankAccount(this.balance);
+
+  void deposit(double amount) {
+    balance += amount;
+  }
+
+  void withdraw(double amount) {
+    if (amount <= balance) {
+      balance -= amount * 1.0001; // Slight over-withdrawal due to floating-point multiplication
+    } else {
+      print('Insufficient funds');
+    }
+  }
+}
+
+void main() {
+  BankAccount account = BankAccount(1000);
+  account.withdraw(200);
+  print('Remaining balance: \$${account.balance}');
+}
+
+// Code 3: Factorial Calculator (Hidden Logic Error: Stack overflow for large inputs)
+class FactorialCalculator {
+  int factorial(int n) {
+    if (n <= 1) return 1;
+    return n * factorial(n - 1); // No base case handling for negative inputs
+  }
+}
+
+void main() {
+  FactorialCalculator calculator = FactorialCalculator();
+  int num = -5; // Will cause infinite recursion
+  int result = calculator.factorial(num);
+  print('Factorial of $num is $result');
+}
+
+
+
+
+
+
+
+
+———————————————————————_
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Debugging Example',
+      home: FirstPage(),
+    );
+  }
+}
+
+class FirstPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('First Page')),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SecondPage()),
+            );
+          },
+          child: Text('Go to Second Page'),
+        ),
+      ),
+    );
+  }
+}
+
+class SecondPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Second Page')),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              height: 300, // Forces ListView to have a height constraint
+              child: ListView.builder(
+                physics: AlwaysScrollableScrollPhysics(), // Conflicting with SingleChildScrollView
+                itemCount: 20,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text('Item \$index'),
+                  );
+                },
+              ),
+            ),
+            SizedBox(height: 20),
+            TextField(
+              decoration: InputDecoration(labelText: 'Enter your name'),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context, 'Returned Data');
+              },
+              child: Text('Go Back'),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
